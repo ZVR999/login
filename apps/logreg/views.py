@@ -12,6 +12,7 @@ today = date.today()
 
 
 def index(request):
+    # print User.objects.all().values()
     return render(request, 'logreg/index.html')
 
 # Registration/Login Confirmation Page
@@ -35,7 +36,9 @@ def regist(request):
         # print request.POST['dob']
         # print today
         return redirect('/')
+    
     else:
+        request.session['name'] = request.POST['first_name']
         first_name = request.POST['first_name']
         last_name = request.POST['last_name']
         email = request.POST['email']
@@ -50,5 +53,16 @@ def regist(request):
 
 
 def login(request):
-    # print bcrypt.checkpw(str(request.POST['password']), hashed_pw.encode())
-    return redirect('/success')
+    
+    user_exists = User.objects.filter(email=request.POST['email'])
+    if user_exists:
+        db_password = str(user_exists[0].password)
+        if bcrypt.checkpw(str(request.POST['password']), db_password.encode()):
+            request.session['name'] = user_exists[0].first_name
+            return redirect('/success')
+        else:
+            messages.error(request,'Invalid email or password')
+    else:
+        messages.error(request,'Invalid email or password')
+
+    return redirect('/')
