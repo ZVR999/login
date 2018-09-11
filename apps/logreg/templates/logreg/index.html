@@ -16,12 +16,15 @@
         <h1>Registration</h1>
         <br>
         <form action="/regist" method="POST">
+            {% csrf_token %}
             <label for="first_name">First Name: </label>
             <input type="text" name="first_name"><br><br>
             <label for="last_name">Last Name: </label>
             <input type="text" name="last_name"><br><br>
             <label for="email">Email: </label>
             <input type="email" name="email"><br><br>
+            <label for="dob">Date of Birth: </label>
+            <input type="date" name="dob"><br><br>
             <label for="password">Password: </label>
             <input type="password" name="password"><br><br>
             <label for="confirm_password">Confirm Password: </label>
@@ -29,16 +32,27 @@
             <input type="submit" value="Register">
         </form>
         <br><br>
-
         <h1>Login</h1>
         <br>
         <form action="/login" method="POST">
+            {% csrf_token %}
             <label for="email">Email: </label>
             <input type="email" name="email"><br><br>
             <label for="password">Password: </label>
             <input type="password" name="password"><br><br>
             <input type="submit" value="Login">
         </form>
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li {% if message.tags %} 
+                class="{{ message.tags }}"
+                {% endif %}>
+                {{ message }}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
     </div>
 </body>
 
